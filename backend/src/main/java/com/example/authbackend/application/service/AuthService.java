@@ -48,9 +48,16 @@ public class AuthService implements AuthUseCase {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException("Email already registered");
         }
+        String role = request.getRole();
+        if (role == null || (!role.equalsIgnoreCase("EMPLOYEE") && !role.equalsIgnoreCase("CUSTOMER"))) {
+            role = "CUSTOMER";
+        } else {
+            role = role.toUpperCase();
+        }
+
         User user = User.builder()
                 .username(request.getUsername()).email(request.getEmail())
-                .password(passwordEncoder.encode(request.getPassword())).role("USER").build();
+                .password(passwordEncoder.encode(request.getPassword())).role(role).build();
         User savedUser = userRepository.save(user);
         String token = tokenService.generateToken(savedUser);
         return AuthResponse.builder()

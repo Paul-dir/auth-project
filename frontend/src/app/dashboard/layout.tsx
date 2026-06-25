@@ -3,15 +3,15 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
-import AuthForm from "@/components/AuthForm";
+import Sidebar from "@/components/Sidebar";
 
-export default function Home() {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && isAuthenticated) {
-      router.push("/dashboard");
+    if (!isLoading && !isAuthenticated) {
+      router.push("/");
     }
   }, [isAuthenticated, isLoading, router]);
 
@@ -23,7 +23,14 @@ export default function Home() {
     );
   }
 
-  if (isAuthenticated) return null;
+  if (!isAuthenticated) return null;
 
-  return <AuthForm />;
+  return (
+    <div className="flex h-screen bg-slate-950 overflow-hidden">
+      <Sidebar />
+      <main className="flex-1 overflow-y-auto bg-slate-950">
+        {children}
+      </main>
+    </div>
+  );
 }

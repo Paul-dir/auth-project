@@ -52,6 +52,10 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/h2-console/**").permitAll()
+                .requestMatchers("/api/employees/**").authenticated()
+                .requestMatchers("/api/departments/**").authenticated()
+                .requestMatchers("/api/leave-requests/**").authenticated()
+                .requestMatchers("/api/dashboard/**").authenticated()
                 .anyRequest().authenticated())
             .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
             .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
