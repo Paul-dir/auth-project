@@ -5,6 +5,7 @@ import com.example.authbackend.application.port.in.DashboardUseCase;
 import com.example.authbackend.application.port.out.DepartmentRepositoryPort;
 import com.example.authbackend.application.port.out.EmployeeRepositoryPort;
 import com.example.authbackend.application.port.out.LeaveRequestRepositoryPort;
+import com.example.authbackend.application.port.out.TicketRepositoryPort;
 import com.example.authbackend.domain.model.Department;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,14 +20,17 @@ public class DashboardService implements DashboardUseCase {
     private final EmployeeRepositoryPort employeeRepository;
     private final DepartmentRepositoryPort departmentRepository;
     private final LeaveRequestRepositoryPort leaveRequestRepository;
+    private final TicketRepositoryPort ticketRepository;
 
     @Autowired
     public DashboardService(EmployeeRepositoryPort employeeRepository,
                              DepartmentRepositoryPort departmentRepository,
-                             LeaveRequestRepositoryPort leaveRequestRepository) {
+                             LeaveRequestRepositoryPort leaveRequestRepository,
+                             TicketRepositoryPort ticketRepository) {
         this.employeeRepository = employeeRepository;
         this.departmentRepository = departmentRepository;
         this.leaveRequestRepository = leaveRequestRepository;
+        this.ticketRepository = ticketRepository;
     }
 
     @Override
@@ -42,6 +46,7 @@ public class DashboardService implements DashboardUseCase {
         stats.setOnLeaveEmployees(onLeave);
         stats.setTotalDepartments(departmentRepository.count());
         stats.setPendingLeaveRequests(leaveRequestRepository.countByStatus("PENDING"));
+        stats.setOpenTickets(ticketRepository.countByStatus("PENDING"));
 
         // employees by department
         List<Department> departments = departmentRepository.findAll();

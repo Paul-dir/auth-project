@@ -50,7 +50,7 @@ import {
 } from "recharts";
 import { differenceInDays, parseISO } from "date-fns";
 
-const PIE_COLORS = ["#06b6d4", "#f59e0b", "#6b7280"];
+const PIE_COLORS = ["#8b5cf6", "#f59e0b", "#64748b", "#ec4899"];
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -103,7 +103,7 @@ function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -127,10 +127,10 @@ function AdminDashboard() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl">
+    <div className="page-shell">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-white">
+        <h1 className="font-display text-2xl lg:text-3xl font-bold text-white">
           {greeting()}, {user?.username} 👋
         </h1>
         <p className="text-slate-400 text-sm mt-1">
@@ -139,18 +139,18 @@ function AdminDashboard() {
       </div>
 
       {/* Stat Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
         <StatCard
           title="Total Employees"
           value={stats?.totalEmployees ?? 0}
           icon={<Users className="w-6 h-6" />}
-          gradient="from-cyan-500/20 to-teal-500/10"
+          gradient="stat-gradient-violet"
         />
         <StatCard
           title="Active Employees"
           value={stats?.activeEmployees ?? 0}
           icon={<UserCheck className="w-6 h-6" />}
-          gradient="from-emerald-500/20 to-green-500/10"
+          gradient="stat-gradient-emerald"
           change="Working"
           changeType="up"
         />
@@ -158,24 +158,32 @@ function AdminDashboard() {
           title="Departments"
           value={stats?.totalDepartments ?? 0}
           icon={<Building2 className="w-6 h-6" />}
-          gradient="from-violet-500/20 to-purple-500/10"
+          gradient="stat-gradient-rose"
         />
         <StatCard
           title="Pending Leaves"
           value={stats?.pendingLeaveRequests ?? 0}
           icon={<Clock className="w-6 h-6" />}
-          gradient="from-amber-500/20 to-orange-500/10"
+          gradient="stat-gradient-amber"
           change={stats?.pendingLeaveRequests ? "Needs review" : "All clear"}
           changeType={stats?.pendingLeaveRequests ? "down" : "up"}
+        />
+        <StatCard
+          title="Open Tickets"
+          value={stats?.openTickets ?? 0}
+          icon={<TicketIcon className="w-6 h-6" />}
+          gradient="stat-gradient-violet"
+          change={stats?.openTickets ? "Awaiting" : "Clear"}
+          changeType={stats?.openTickets ? "down" : "up"}
         />
       </div>
 
       {/* Charts Row */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Bar Chart */}
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div className="lg:col-span-2 glass-card p-5">
           <div className="flex items-center gap-2 mb-5">
-            <TrendingUp className="w-5 h-5 text-cyan-400" />
+            <TrendingUp className="w-5 h-5 text-brand-400" />
             <h2 className="text-white font-semibold">Employees by Department</h2>
           </div>
           {deptChartData.length > 0 ? (
@@ -186,9 +194,9 @@ function AdminDashboard() {
                 <Tooltip
                   contentStyle={{ background: "#1e293b", border: "1px solid #334155", borderRadius: 8 }}
                   labelStyle={{ color: "#f1f5f9" }}
-                  itemStyle={{ color: "#06b6d4" }}
+                  itemStyle={{ color: "#8b5cf6" }}
                 />
-                <Bar dataKey="employees" fill="#06b6d4" radius={[6, 6, 0, 0]} />
+                <Bar dataKey="employees" fill="#8b5cf6" radius={[6, 6, 0, 0]} />
               </BarChart>
             </ResponsiveContainer>
           ) : (
@@ -197,9 +205,9 @@ function AdminDashboard() {
         </div>
 
         {/* Pie Chart */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div className="glass-card p-5">
           <div className="flex items-center gap-2 mb-5">
-            <CalendarDays className="w-5 h-5 text-cyan-400" />
+            <CalendarDays className="w-5 h-5 text-brand-400" />
             <h2 className="text-white font-semibold">Status Overview</h2>
           </div>
           {pieData.length > 0 ? (
@@ -238,12 +246,12 @@ function AdminDashboard() {
       {/* Bottom Row */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Recent Employees */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-white font-semibold flex items-center gap-2">
-              <Users className="w-5 h-5 text-cyan-400" /> Recent Employees
+              <Users className="w-5 h-5 text-brand-400" /> Recent Employees
             </h2>
-            <a href="/dashboard/employees" className="text-cyan-400 text-xs hover:underline">View all</a>
+            <a href="/dashboard/employees" className="text-brand-400 text-xs hover:underline">View all</a>
           </div>
           <div className="space-y-3">
             {recentEmployees.map((emp) => (
@@ -263,12 +271,12 @@ function AdminDashboard() {
         </div>
 
         {/* Pending Leave Requests */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+        <div className="glass-card p-5">
           <div className="flex items-center justify-between mb-4">
             <h2 className="text-white font-semibold flex items-center gap-2">
-              <CalendarDays className="w-5 h-5 text-cyan-400" /> Pending Leaves
+              <CalendarDays className="w-5 h-5 text-brand-400" /> Pending Leaves
             </h2>
-            <a href="/dashboard/leaves" className="text-cyan-400 text-xs hover:underline">View all</a>
+            <a href="/dashboard/leaves" className="text-brand-400 text-xs hover:underline">View all</a>
           </div>
           <div className="space-y-3">
             {pendingLeaves.map((lr) => (
@@ -389,7 +397,7 @@ function EmployeeDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -406,11 +414,11 @@ function EmployeeDashboard() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl">
+    <div className="page-shell">
       {/* Welcome & Action */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white">
             Welcome back, {employee?.fullName || user?.username}! 👋
           </h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -419,7 +427,7 @@ function EmployeeDashboard() {
         </div>
         <button
           onClick={handleOpenModal}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
         >
           <Plus className="w-4 h-4" /> Request Leave
         </button>
@@ -428,18 +436,18 @@ function EmployeeDashboard() {
       {/* Grid Profile Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Profile Card */}
-        <div className="bg-gradient-to-br from-slate-900 to-slate-950 border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-cyan-500/10 rounded-full blur-2xl" />
+        <div className="bg-gradient-to-br glass-card border border-slate-800 rounded-3xl p-6 shadow-xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-32 h-32 bg-brand-500/10 rounded-full blur-2xl" />
           <div className="relative z-10 space-y-5">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-teal-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md shadow-cyan-500/10">
+              <div className="w-16 h-16 bg-gradient-to-br from-cyan-400 to-indigo-600 rounded-2xl flex items-center justify-center text-white text-2xl font-bold shadow-md shadow-brand-500/10">
                 {employee?.fullName[0] || "?"}
               </div>
               <div>
                 <h2 className="text-lg font-bold text-white">{employee?.fullName}</h2>
                 <p className="text-slate-400 text-xs">{employee?.position}</p>
                 <div className="mt-1">
-                  <span className="bg-cyan-500/20 text-cyan-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">
+                  <span className="bg-brand-500/20 text-brand-400 text-[10px] font-semibold px-2 py-0.5 rounded-full">
                     {employee?.status}
                   </span>
                 </div>
@@ -489,7 +497,7 @@ function EmployeeDashboard() {
               title="My Leaves Logged"
               value={leaves.length}
               icon={<CalendarDays className="w-5 h-5" />}
-              gradient="from-cyan-500/20 to-cyan-500/5"
+              gradient="from-brand-500/20 to-cyan-500/5"
             />
             <StatCard
               title="Approved Requests"
@@ -506,9 +514,9 @@ function EmployeeDashboard() {
           </div>
 
           {/* Leaves List */}
-          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <div className="glass-card p-5">
             <h2 className="text-white font-semibold mb-4 flex items-center gap-2">
-              <Clock className="w-5 h-5 text-cyan-400" /> Recent Leave Applications
+              <Clock className="w-5 h-5 text-brand-400" /> Recent Leave Applications
             </h2>
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm border-collapse">
@@ -558,7 +566,7 @@ function EmployeeDashboard() {
       {/* CREATE LEAVE MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
               <h2 className="text-xl font-bold text-white">Request Leave</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors">
@@ -581,7 +589,7 @@ function EmployeeDashboard() {
                 <select
                   value={leaveType}
                   onChange={(e) => setLeaveType(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                  className="w-full input-field text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                 >
                   <option value="ANNUAL">Annual Leave</option>
                   <option value="SICK">Sick Leave</option>
@@ -601,7 +609,7 @@ function EmployeeDashboard() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full input-field text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -613,7 +621,7 @@ function EmployeeDashboard() {
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full input-field text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -628,7 +636,7 @@ function EmployeeDashboard() {
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Provide reason or description..."
                   rows={4}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors resize-none"
+                  className="w-full input-field text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors resize-none"
                   required
                 />
               </div>
@@ -644,7 +652,7 @@ function EmployeeDashboard() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
                 >
                   {submitting ? "Submitting..." : "Submit"}
                 </button>
@@ -737,7 +745,7 @@ function CustomerDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -754,11 +762,11 @@ function CustomerDashboard() {
   }
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl">
+    <div className="page-shell">
       {/* Welcome Title */}
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white">
             Welcome to support portal, {user?.username}! 👋
           </h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -767,7 +775,7 @@ function CustomerDashboard() {
         </div>
         <button
           onClick={handleOpenModal}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
         >
           <PlusCircle className="w-4 h-4" /> Submit Ticket
         </button>
@@ -778,8 +786,8 @@ function CustomerDashboard() {
         <StatCard
           title="Total Tickets submitted"
           value={tickets.length}
-          icon={<TicketIcon className="w-6 h-6 text-cyan-400" />}
-          gradient="from-cyan-500/20 to-cyan-500/5"
+          icon={<TicketIcon className="w-6 h-6 text-brand-400" />}
+          gradient="from-brand-500/20 to-cyan-500/5"
         />
         <StatCard
           title="Open / Pending Tickets"
@@ -796,9 +804,9 @@ function CustomerDashboard() {
       </div>
 
       {/* Ticket List */}
-      <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <div className="glass-card p-6 shadow-xl">
         <h2 className="text-white font-semibold mb-4 flex items-center gap-2">
-          <MessageSquare className="w-5 h-5 text-cyan-400" /> My Tickets History
+          <MessageSquare className="w-5 h-5 text-brand-400" /> My Tickets History
         </h2>
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm border-collapse">
@@ -850,7 +858,7 @@ function CustomerDashboard() {
       {/* CREATE TICKET MODAL */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
               <h2 className="text-xl font-bold text-white">Submit Support Ticket</h2>
               <button onClick={() => setIsModalOpen(false)} className="text-slate-400 hover:text-white transition-colors">
@@ -873,7 +881,7 @@ function CustomerDashboard() {
                 <select
                   value={departmentId}
                   onChange={(e) => setDepartmentId(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                  className="w-full input-field text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                   required
                 >
                   <option value="" disabled>Select Department</option>
@@ -894,7 +902,7 @@ function CustomerDashboard() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Summary of issue..."
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                  className="w-full input-field text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   required
                 />
               </div>
@@ -908,7 +916,7 @@ function CustomerDashboard() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Provide all details about the problem..."
                   rows={5}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors resize-none"
+                  className="w-full input-field text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors resize-none"
                   required
                 />
               </div>
@@ -924,7 +932,7 @@ function CustomerDashboard() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
                 >
                   {submitting ? "Submitting..." : "Submit Inquiry"}
                 </button>

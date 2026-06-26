@@ -98,18 +98,18 @@ export default function DepartmentsPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="page-shell mx-auto">
       {/* Header section */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Departments</h1>
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">Departments</h1>
           <p className="text-slate-400 text-sm mt-1">
             Organize, monitor and configure all company departments.
           </p>
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
         >
           <Plus className="w-4 h-4" /> Add Department
         </button>
@@ -129,26 +129,26 @@ export default function DepartmentsPage() {
       {/* Loading state */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {departments.map((dept) => (
             <div
               key={dept.id}
-              className="bg-slate-900/50 border border-slate-800/80 rounded-2xl p-6 shadow-xl relative overflow-hidden backdrop-blur-sm group hover:border-slate-700/85 transition-all duration-300 hover:shadow-cyan-900/5"
+              className="bg-white/[0.03] border border-white/[0.08] rounded-2xl p-6 shadow-xl relative overflow-hidden backdrop-blur-sm group hover:border-white/[0.12] transition-all duration-300 hover:shadow-glow"
             >
               {/* Card top banner style */}
-              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-cyan-500/50 to-teal-600/50" />
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-brand-500/50 to-indigo-600/50" />
 
               <div className="flex items-start justify-between gap-4 mb-4">
-                <div className="w-12 h-12 bg-cyan-500/10 border border-cyan-500/20 rounded-xl flex items-center justify-center text-cyan-400 shrink-0">
+                <div className="w-12 h-12 bg-brand-500/10 border border-brand-500/20 rounded-xl flex items-center justify-center text-brand-400 shrink-0">
                   <Building2 className="w-6 h-6" />
                 </div>
                 <div className="flex items-center gap-1">
                   <button
                     onClick={() => openEditModal(dept)}
-                    className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-slate-800 rounded-lg transition-colors"
+                    className="p-2 text-slate-400 hover:text-brand-400 hover:bg-slate-800 rounded-lg transition-colors"
                     title="Edit Department"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -168,11 +168,11 @@ export default function DepartmentsPage() {
                 {dept.description || "No description provided."}
               </p>
 
-              <div className="flex items-center justify-between border-t border-slate-800/60 pt-4">
+              <div className="flex items-center justify-between border-t border-white/[0.08]/60 pt-4">
                 <span className="text-slate-500 text-xs font-semibold uppercase tracking-wider">
                   Staff Strength
                 </span>
-                <span className="bg-slate-800 text-cyan-400 px-3 py-1 rounded-full text-xs font-bold border border-slate-700">
+                <span className="bg-slate-800 text-brand-400 px-3 py-1 rounded-full text-xs font-bold border border-white/[0.12]">
                   {dept.employeeCount} {dept.employeeCount === 1 ? "Employee" : "Employees"}
                 </span>
               </div>
@@ -180,7 +180,7 @@ export default function DepartmentsPage() {
           ))}
 
           {departments.length === 0 && (
-            <div className="col-span-full py-20 text-center bg-slate-900/20 border border-dashed border-slate-800 rounded-3xl">
+            <div className="col-span-full py-20 text-center bg-slate-900/20 border border-dashed border-white/[0.08] rounded-3xl">
               <Building2 className="w-12 h-12 text-slate-600 mx-auto mb-3" />
               <p className="text-slate-400 font-medium">No departments found</p>
               <p className="text-slate-600 text-sm mt-1">Get started by creating your first department.</p>
@@ -191,10 +191,10 @@ export default function DepartmentsPage() {
 
       {/* CREATE/EDIT MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm animate-fade-in">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface/80 backdrop-blur-sm animate-fade-in">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative overflow-hidden">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white">
                 {editingDept ? "Edit Department" : "Add Department"}
               </h2>
@@ -223,7 +223,7 @@ export default function DepartmentsPage() {
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g. Engineering, Human Resources"
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-400 text-sm transition-colors"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-400 text-sm transition-colors"
                   required
                 />
               </div>
@@ -237,11 +237,11 @@ export default function DepartmentsPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Describe the department's focus..."
                   rows={4}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-400 text-sm transition-colors resize-none"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-400 text-sm transition-colors resize-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
@@ -252,7 +252,7 @@ export default function DepartmentsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
                 >
                   {submitting ? "Saving..." : editingDept ? "Save Changes" : "Create Department"}
                 </button>
@@ -264,8 +264,8 @@ export default function DepartmentsPage() {
 
       {/* DELETE CONFIRMATION MODAL */}
       {deptToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface/80 backdrop-blur-sm">
+          <div className="w-full max-w-sm glass-card p-6 shadow-2xl">
             <h2 className="text-lg font-bold text-white mb-2">Delete Department?</h2>
             <p className="text-slate-400 text-sm mb-6 leading-relaxed">
               Are you sure you want to delete <span className="text-white font-semibold">{deptToDelete.name}</span>? This action is permanent.

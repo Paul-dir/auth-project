@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 import { useRouter } from "next/navigation";
+import { authApi } from "@/lib/api";
 
 interface User {
   id: number;
@@ -29,17 +30,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const storedToken = localStorage.getItem("token");
-    const storedUser = localStorage.getItem("user");
-    if (storedToken && storedUser) {
-      try {
+    if (!storedToken) {
+      setIsLoading(false);
+      return;
+    }
+
+    authApi
+      .me(storedToken)
+      .then((profile) => {
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch {
+        setUser(profile);
+        localStorage.setItem("user", JSON.stringify(profile));
+      })
+      .catch(() => {
         localStorage.removeItem("token");
         localStorage.removeItem("user");
-      }
-    }
-    setIsLoading(false);
+      })
+      .finally(() => setIsLoading(false));
   }, []);
 
   const login = (newToken: string, userData: User) => {

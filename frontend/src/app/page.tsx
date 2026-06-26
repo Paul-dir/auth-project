@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 import AuthForm from "@/components/AuthForm";
 
 export default function Home() {
@@ -17,8 +18,8 @@ export default function Home() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <LoadingSpinner />
       </div>
     );
   }

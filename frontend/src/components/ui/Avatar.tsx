@@ -1,5 +1,5 @@
 const gradients = [
-  "from-cyan-500 to-teal-600",
+  "from-brand-500 to-indigo-600",
   "from-violet-500 to-purple-600",
   "from-pink-500 to-rose-600",
   "from-amber-500 to-orange-600",

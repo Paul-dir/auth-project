@@ -4,6 +4,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/context/AuthContext";
 import Sidebar from "@/components/Sidebar";
+import RoleGuard from "@/components/RoleGuard";
+import LoadingSpinner from "@/components/ui/LoadingSpinner";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { isAuthenticated, isLoading } = useAuth();
@@ -17,8 +19,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center">
-        <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen bg-surface flex items-center justify-center">
+        <LoadingSpinner />
       </div>
     );
   }
@@ -26,10 +28,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isAuthenticated) return null;
 
   return (
-    <div className="flex h-screen bg-slate-950 overflow-hidden">
+    <div className="flex h-screen bg-surface overflow-hidden relative">
+      <div className="ambient-bg" />
       <Sidebar />
-      <main className="flex-1 overflow-y-auto bg-slate-950">
-        {children}
+      <main className="flex-1 overflow-y-auto relative z-10">
+        <RoleGuard>{children}</RoleGuard>
       </main>
     </div>
   );

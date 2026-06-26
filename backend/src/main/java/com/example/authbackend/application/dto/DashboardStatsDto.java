@@ -8,6 +8,7 @@ public class DashboardStatsDto {
     private long onLeaveEmployees;
     private long totalDepartments;
     private long pendingLeaveRequests;
+    private long openTickets;
     private Map<String, Long> employeesByDepartment;
     private Map<String, Long> employeesByStatus;
 
@@ -23,6 +24,8 @@ public class DashboardStatsDto {
     public void setTotalDepartments(long totalDepartments) { this.totalDepartments = totalDepartments; }
     public long getPendingLeaveRequests() { return pendingLeaveRequests; }
     public void setPendingLeaveRequests(long pendingLeaveRequests) { this.pendingLeaveRequests = pendingLeaveRequests; }
+    public long getOpenTickets() { return openTickets; }
+    public void setOpenTickets(long openTickets) { this.openTickets = openTickets; }
     public Map<String, Long> getEmployeesByDepartment() { return employeesByDepartment; }
     public void setEmployeesByDepartment(Map<String, Long> employeesByDepartment) { this.employeesByDepartment = employeesByDepartment; }
     public Map<String, Long> getEmployeesByStatus() { return employeesByStatus; }

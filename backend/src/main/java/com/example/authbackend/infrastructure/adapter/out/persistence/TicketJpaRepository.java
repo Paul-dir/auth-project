@@ -8,4 +8,5 @@ import java.util.List;
 public interface TicketJpaRepository extends JpaRepository<TicketEntity, Long> {
     List<TicketEntity> findByCustomerUsernameOrderByCreatedAtDesc(String customerUsername);
     List<TicketEntity> findAllByOrderByCreatedAtDesc();
+    long countByStatus(String status);
 }

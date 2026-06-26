@@ -160,25 +160,25 @@ export default function EmployeesPage() {
   };
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="page-shell mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Employees</h1>
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">Employees</h1>
           <p className="text-slate-400 text-sm mt-1">
             Manage your corporate team, positions, details and status.
           </p>
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
         >
           <Plus className="w-4 h-4" /> Add Employee
         </button>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 backdrop-blur-sm">
+      <div className="glass-card border border-white/[0.08] rounded-2xl p-4 flex flex-col md:flex-row items-center gap-4 backdrop-blur-sm">
         {/* Search */}
         <div className="relative w-full md:flex-1">
           <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
@@ -187,7 +187,7 @@ export default function EmployeesPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search employees by name, email or position..."
-            className="w-full bg-slate-950/80 border border-slate-800/85 text-white rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+            className="w-full bg-surface/80 border border-white/[0.08]/85 text-white rounded-xl py-2.5 pl-10 pr-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
           />
         </div>
 
@@ -196,7 +196,7 @@ export default function EmployeesPage() {
           <select
             value={selectedDept}
             onChange={(e) => setSelectedDept(e.target.value === "all" ? "all" : Number(e.target.value))}
-            className="w-full bg-slate-950/80 border border-slate-800/85 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors appearance-none cursor-pointer"
+            className="w-full bg-surface/80 border border-white/[0.08]/85 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors appearance-none cursor-pointer"
           >
             <option value="all">All Departments</option>
             {departments.map((d) => (
@@ -213,7 +213,7 @@ export default function EmployeesPage() {
           <select
             value={selectedStatus}
             onChange={(e) => setSelectedStatus(e.target.value)}
-            className="w-full bg-slate-950/80 border border-slate-800/85 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors appearance-none cursor-pointer"
+            className="w-full bg-surface/80 border border-white/[0.08]/85 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors appearance-none cursor-pointer"
           >
             <option value="all">All Statuses</option>
             <option value="ACTIVE">Active</option>
@@ -238,14 +238,14 @@ export default function EmployeesPage() {
       {/* Table Section */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="bg-slate-900/30 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
+        <div className="glass-card border border-white/[0.08] rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-900/80">
+                <tr className="border-b border-white/[0.08] bg-white/[0.04]">
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Employee</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Department</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Status</th>
@@ -256,12 +256,12 @@ export default function EmployeesPage() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {employees.map((emp) => (
-                  <tr key={emp.id} className="hover:bg-slate-900/30 transition-colors group">
+                  <tr key={emp.id} className="hover:glass-card transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar name={emp.fullName} size="md" />
                         <div className="min-w-0">
-                          <p className="text-white text-sm font-semibold truncate group-hover:text-cyan-400 transition-colors">
+                          <p className="text-white text-sm font-semibold truncate group-hover:text-brand-400 transition-colors">
                             {emp.fullName}
                           </p>
                           <p className="text-slate-500 text-xs truncate flex items-center gap-1.5 mt-0.5">
@@ -294,7 +294,7 @@ export default function EmployeesPage() {
                       <div className="flex items-center justify-end gap-1">
                         <button
                           onClick={() => openEditModal(emp)}
-                          className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-slate-800 rounded-lg transition-colors"
+                          className="p-2 text-slate-400 hover:text-brand-400 hover:bg-slate-800 rounded-lg transition-colors"
                           title="Edit Details"
                         >
                           <Edit2 className="w-4 h-4" />
@@ -326,10 +326,10 @@ export default function EmployeesPage() {
 
       {/* CREATE/EDIT MODAL */}
       {isModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm overflow-y-auto">
-          <div className="w-full max-w-2xl bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative my-8">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface/80 backdrop-blur-sm overflow-y-auto">
+          <div className="w-full max-w-2xl glass-card p-6 shadow-2xl relative my-8">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white">
                 {editingEmp ? "Edit Employee" : "Add Employee"}
               </h2>
@@ -360,7 +360,7 @@ export default function EmployeesPage() {
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder="e.g. Alice"
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -373,7 +373,7 @@ export default function EmployeesPage() {
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder="e.g. Johnson"
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -390,7 +390,7 @@ export default function EmployeesPage() {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="e.g. alice@company.com"
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -403,7 +403,7 @@ export default function EmployeesPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="e.g. +1-555-0101"
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   />
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function EmployeesPage() {
                     value={position}
                     onChange={(e) => setPosition(e.target.value)}
                     placeholder="e.g. Senior Software Engineer"
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   />
                 </div>
                 <div>
@@ -429,7 +429,7 @@ export default function EmployeesPage() {
                   <select
                     value={departmentId}
                     onChange={(e) => setDepartmentId(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                     required
                   >
                     <option value="" disabled>Select Department</option>
@@ -452,7 +452,7 @@ export default function EmployeesPage() {
                     type="date"
                     value={hireDate}
                     onChange={(e) => setHireDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   />
                 </div>
                 <div>
@@ -463,7 +463,7 @@ export default function EmployeesPage() {
                     type="date"
                     value={dateOfBirth}
                     onChange={(e) => setDateOfBirth(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   />
                 </div>
               </div>
@@ -477,7 +477,7 @@ export default function EmployeesPage() {
                   <select
                     value={status}
                     onChange={(e) => setStatus(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                   >
                     <option value="ACTIVE">Active</option>
                     <option value="ON_LEAVE">On Leave</option>
@@ -493,7 +493,7 @@ export default function EmployeesPage() {
                     value={salary}
                     onChange={(e) => setSalary(e.target.value === "" ? "" : Number(e.target.value))}
                     placeholder="e.g. 85000"
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   />
                 </div>
               </div>
@@ -508,12 +508,12 @@ export default function EmployeesPage() {
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="e.g. 123 Main St, City, Country"
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                 />
               </div>
 
               {/* Footer Buttons */}
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
@@ -524,7 +524,7 @@ export default function EmployeesPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
                 >
                   {submitting ? "Saving..." : editingEmp ? "Save Changes" : "Add Employee"}
                 </button>
@@ -536,8 +536,8 @@ export default function EmployeesPage() {
 
       {/* DELETE CONFIRMATION MODAL */}
       {empToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-surface/80 backdrop-blur-sm">
+          <div className="w-full max-w-sm glass-card p-6 shadow-2xl">
             <h2 className="text-lg font-bold text-white mb-2">Delete Employee?</h2>
             <p className="text-slate-400 text-sm mb-6 leading-relaxed">
               Are you sure you want to delete <span className="text-white font-semibold">{empToDelete.fullName}</span>? This action cannot be undone.

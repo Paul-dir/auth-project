@@ -198,11 +198,11 @@ export default function LeavesPage() {
   });
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="page-shell mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">
             {isEmployee ? "My Leave Requests" : "Leave Requests"}
           </h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -213,16 +213,16 @@ export default function LeavesPage() {
         </div>
         <button
           onClick={openCreateModal}
-          className="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+          className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
         >
           <Plus className="w-4 h-4" /> Request Leave
         </button>
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-sm">
+      <div className="glass-card border border-white/[0.08] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-sm">
         <span className="text-slate-400 text-sm font-semibold flex items-center gap-2">
-          <Filter className="w-4 h-4 text-cyan-400" /> Filter Requests
+          <Filter className="w-4 h-4 text-brand-400" /> Filter Requests
         </span>
         <div className="flex items-center gap-2">
           {["all", "PENDING", "APPROVED", "REJECTED"].map((st) => (
@@ -231,8 +231,8 @@ export default function LeavesPage() {
               onClick={() => setSelectedStatus(st)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all duration-300 ${
                 selectedStatus === st
-                  ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/30"
-                  : "bg-slate-950/60 text-slate-400 border-slate-800/80 hover:text-white"
+                  ? "bg-brand-500/20 text-brand-400 border-brand-500/30"
+                  : "bg-surface/60 text-slate-400 border-white/[0.08] hover:text-white"
               }`}
             >
               {st === "all" ? "All Requests" : st.charAt(0) + st.slice(1).toLowerCase()}
@@ -255,14 +255,14 @@ export default function LeavesPage() {
       {/* Table Section */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="bg-slate-900/30 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
+        <div className="glass-card border border-white/[0.08] rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-900/80">
+                <tr className="border-b border-white/[0.08] bg-white/[0.04]">
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Employee</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Leave Type</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Duration</th>
@@ -273,12 +273,12 @@ export default function LeavesPage() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {filteredLeaves.map((lr) => (
-                  <tr key={lr.id} className="hover:bg-slate-900/30 transition-colors group">
+                  <tr key={lr.id} className="hover:glass-card transition-colors group">
                     <td className="p-4">
                       <div className="flex items-center gap-3">
                         <Avatar name={lr.employeeName} size="md" />
                         <div>
-                          <p className="text-white text-sm font-semibold truncate group-hover:text-cyan-400 transition-colors">
+                          <p className="text-white text-sm font-semibold truncate group-hover:text-brand-400 transition-colors">
                             {lr.employeeName}
                           </p>
                           <p className="text-slate-500 text-xs truncate max-w-[200px] mt-0.5" title={lr.reason}>
@@ -310,7 +310,7 @@ export default function LeavesPage() {
                             {isAdmin && (
                               <button
                                 onClick={() => handleReview(lr)}
-                                className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1"
+                                className="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1"
                               >
                                 Review
                               </button>
@@ -326,7 +326,7 @@ export default function LeavesPage() {
                         ) : (
                           <button
                             onClick={() => setDetailRequest(lr)}
-                            className="p-2 text-slate-400 hover:text-cyan-400 hover:bg-slate-800 rounded-lg transition-colors"
+                            className="p-2 text-slate-400 hover:text-brand-400 hover:bg-slate-800 rounded-lg transition-colors"
                             title="View Review Details"
                           >
                             <Eye className="w-4 h-4" />
@@ -353,8 +353,8 @@ export default function LeavesPage() {
       {/* CREATE LEAVE REQUEST MODAL */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white">Request Leave</h2>
               <button
                 onClick={() => setIsCreateOpen(false)}
@@ -380,7 +380,7 @@ export default function LeavesPage() {
                   <select
                     value={employeeId}
                     onChange={(e) => setEmployeeId(Number(e.target.value))}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                     required
                   >
                     <option value="" disabled>Select Employee</option>
@@ -398,7 +398,7 @@ export default function LeavesPage() {
                   <label className="block text-slate-455 text-xs font-semibold uppercase tracking-wider mb-1">
                     Employee Account
                   </label>
-                  <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white font-medium">
+                  <div className="bg-surface border border-white/[0.08] rounded-xl p-3 text-sm text-white font-medium">
                     {employees[0].fullName} ({employees[0].position})
                   </div>
                 </div>
@@ -411,7 +411,7 @@ export default function LeavesPage() {
                 <select
                   value={leaveType}
                   onChange={(e) => setLeaveType(e.target.value)}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                 >
                   <option value="ANNUAL">Annual Leave</option>
                   <option value="SICK">Sick Leave</option>
@@ -431,7 +431,7 @@ export default function LeavesPage() {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -443,7 +443,7 @@ export default function LeavesPage() {
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
-                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                    className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                     required
                   />
                 </div>
@@ -458,11 +458,11 @@ export default function LeavesPage() {
                   onChange={(e) => setReason(e.target.value)}
                   placeholder="Provide details about the leave request..."
                   rows={4}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors resize-none"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors resize-none"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
@@ -473,7 +473,7 @@ export default function LeavesPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
                 >
                   {submitting ? "Submitting..." : "Submit"}
                 </button>
@@ -486,8 +486,8 @@ export default function LeavesPage() {
       {/* REVIEW REQUEST MODAL */}
       {reviewRequest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white">Review Leave Request</h2>
               <button
                 onClick={() => setReviewRequest(null)}
@@ -505,7 +505,7 @@ export default function LeavesPage() {
             )}
 
             <div className="space-y-4 mb-6">
-              <div className="flex items-center gap-3 p-3 bg-slate-950/40 border border-slate-800/60 rounded-2xl">
+              <div className="flex items-center gap-3 p-3 bg-surface/40 border border-white/[0.08]/60 rounded-2xl">
                 <Avatar name={reviewRequest.employeeName} size="md" />
                 <div>
                   <h3 className="text-white font-bold text-sm">{reviewRequest.employeeName}</h3>
@@ -513,7 +513,7 @@ export default function LeavesPage() {
                 </div>
               </div>
 
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">
+              <div className="bg-surface border border-white/[0.08] rounded-xl p-4 space-y-2">
                 <div className="flex justify-between text-xs">
                   <span className="text-slate-500">Duration:</span>
                   <span className="text-white font-semibold">{calculateDuration(reviewRequest.startDate, reviewRequest.endDate)} Days</span>
@@ -523,7 +523,7 @@ export default function LeavesPage() {
                   <span className="text-white font-semibold">{reviewRequest.startDate} → {reviewRequest.endDate}</span>
                 </div>
                 {reviewRequest.reason && (
-                  <div className="border-t border-slate-800/80 pt-2 mt-2">
+                  <div className="border-t border-white/[0.08] pt-2 mt-2">
                     <span className="text-slate-500 block text-xs mb-1">Reason:</span>
                     <p className="text-slate-300 text-xs leading-relaxed">{reviewRequest.reason}</p>
                   </div>
@@ -539,12 +539,12 @@ export default function LeavesPage() {
                   onChange={(e) => setReviewNotes(e.target.value)}
                   placeholder="Provide review reasoning (optional)..."
                   rows={3}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors resize-none"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors resize-none"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+            <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
               <button
                 type="button"
                 onClick={() => setReviewRequest(null)}
@@ -576,8 +576,8 @@ export default function LeavesPage() {
       {/* DETAIL MODAL (FOR PAST REVIEWS) */}
       {detailRequest && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white">Leave Details</h2>
               <button
                 onClick={() => setDetailRequest(null)}
@@ -599,7 +599,7 @@ export default function LeavesPage() {
                 </div>
               </div>
 
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2 text-xs">
+              <div className="bg-surface border border-white/[0.08] rounded-xl p-4 space-y-2 text-xs">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Duration:</span>
                   <span className="text-white font-semibold">{calculateDuration(detailRequest.startDate, detailRequest.endDate)} Days</span>
@@ -609,19 +609,19 @@ export default function LeavesPage() {
                   <span className="text-white font-semibold">{detailRequest.startDate} → {detailRequest.endDate}</span>
                 </div>
                 {detailRequest.reason && (
-                  <div className="border-t border-slate-800/80 pt-2 mt-2">
+                  <div className="border-t border-white/[0.08] pt-2 mt-2">
                     <span className="text-slate-500 block mb-1">Reason:</span>
                     <p className="text-slate-300 leading-relaxed">{detailRequest.reason}</p>
                   </div>
                 )}
               </div>
 
-              <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-4 text-xs space-y-2">
+              <div className="bg-surface/40 border border-white/[0.08] rounded-xl p-4 text-xs space-y-2">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Reviewed By:</span>
                   <span className="text-white font-semibold">{detailRequest.reviewedBy || "N/A"}</span>
                 </div>
-                <div className="border-t border-slate-800 pt-2 mt-2">
+                <div className="border-t border-white/[0.08] pt-2 mt-2">
                   <span className="text-slate-500 block mb-1">Review Notes:</span>
                   <p className="text-slate-300 leading-relaxed italic">
                     {detailRequest.reviewNotes || "No review notes provided."}
@@ -630,7 +630,7 @@ export default function LeavesPage() {
               </div>
             </div>
 
-            <div className="flex justify-end pt-6 border-t border-slate-800 mt-6">
+            <div className="flex justify-end pt-6 border-t border-white/[0.08] mt-6">
               <button
                 type="button"
                 onClick={() => setDetailRequest(null)}
@@ -646,7 +646,7 @@ export default function LeavesPage() {
       {/* DELETE CONFIRMATION MODAL */}
       {leaveToDelete && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
+          <div className="w-full max-w-sm glass-card p-6 shadow-2xl">
             <h2 className="text-lg font-bold text-white mb-2">Delete Leave Request?</h2>
             <p className="text-slate-400 text-sm mb-6 leading-relaxed">
               Are you sure you want to delete this leave request? This action cannot be undone.

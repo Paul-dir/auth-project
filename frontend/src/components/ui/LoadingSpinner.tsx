@@ -1,0 +1,7 @@
+export default function LoadingSpinner({ className = "w-8 h-8" }: { className?: string }) {
+  return (
+    <div
+      className={`${className} border-2 border-brand-400 border-t-transparent rounded-full animate-spin`}
+    />
+  );
+}

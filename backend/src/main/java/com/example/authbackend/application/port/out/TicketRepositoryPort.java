@@ -9,4 +9,5 @@ public interface TicketRepositoryPort {
     Optional<Ticket> findById(Long id);
     List<Ticket> findByCustomerUsername(String customerUsername);
     List<Ticket> findAll();
+    long countByStatus(String status);
 }

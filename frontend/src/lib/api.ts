@@ -183,6 +183,7 @@ export interface DashboardStats {
   onLeaveEmployees: number;
   totalDepartments: number;
   pendingLeaveRequests: number;
+  openTickets: number;
   employeesByDepartment: Record<string, number>;
   employeesByStatus: Record<string, number>;
 }

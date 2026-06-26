@@ -160,11 +160,11 @@ export default function TicketsPage() {
   });
 
   return (
-    <div className="p-6 space-y-6 max-w-7xl mx-auto">
+    <div className="page-shell mx-auto">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">
+          <h1 className="font-display text-2xl lg:text-3xl font-bold text-white tracking-tight">
             {isAdmin ? "Customer Support Tickets" : "My Support Tickets"}
           </h1>
           <p className="text-slate-400 text-sm mt-1">
@@ -176,7 +176,7 @@ export default function TicketsPage() {
         {isCustomer && (
           <button
             onClick={openCreateModal}
-            className="flex items-center justify-center gap-2 bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
+            className="flex items-center justify-center gap-2 bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-4 py-2.5 rounded-xl font-semibold text-sm shadow-lg shadow-brand-500/20 hover:shadow-brand-500/35 transform hover:scale-[1.02] active:scale-[0.98] transition-all duration-300"
           >
             <PlusCircle className="w-4 h-4" /> New Ticket
           </button>
@@ -184,9 +184,9 @@ export default function TicketsPage() {
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-slate-900/40 border border-slate-800/80 rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-sm">
+      <div className="glass-card border border-white/[0.08] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4 backdrop-blur-sm">
         <span className="text-slate-400 text-sm font-semibold flex items-center gap-2">
-          <Filter className="w-4 h-4 text-cyan-400" /> Filter Tickets
+          <Filter className="w-4 h-4 text-brand-400" /> Filter Tickets
         </span>
         <div className="flex items-center gap-2">
           {["all", "PENDING", "RESOLVED"].map((st) => (
@@ -195,8 +195,8 @@ export default function TicketsPage() {
               onClick={() => setSelectedStatus(st)}
               className={`px-4 py-2 rounded-xl text-xs font-semibold border transition-all duration-300 ${
                 selectedStatus === st
-                  ? "bg-cyan-500/20 text-cyan-400 border-cyan-500/30"
-                  : "bg-slate-950/60 text-slate-400 border-slate-800/80 hover:text-white"
+                  ? "bg-brand-500/20 text-brand-400 border-brand-500/30"
+                  : "bg-surface/60 text-slate-400 border-white/[0.08] hover:text-white"
               }`}
             >
               {st === "all" ? "All Tickets" : st.charAt(0) + st.slice(1).toLowerCase()}
@@ -219,14 +219,14 @@ export default function TicketsPage() {
       {/* Table Section */}
       {loading ? (
         <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-brand-400 border-t-transparent rounded-full animate-spin" />
         </div>
       ) : (
-        <div className="bg-slate-900/30 border border-slate-800/80 rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
+        <div className="glass-card border border-white/[0.08] rounded-2xl overflow-hidden backdrop-blur-sm shadow-xl">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-slate-800 bg-slate-900/80">
+                <tr className="border-b border-white/[0.08] bg-white/[0.04]">
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Subject</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Customer</th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-slate-400">Department</th>
@@ -237,7 +237,7 @@ export default function TicketsPage() {
               </thead>
               <tbody className="divide-y divide-slate-800/60">
                 {filteredTickets.map((t) => (
-                  <tr key={t.id} className="hover:bg-slate-900/30 transition-colors group">
+                  <tr key={t.id} className="hover:glass-card transition-colors group">
                     <td className="p-4 font-semibold text-white max-w-[220px] truncate" title={t.subject}>
                       {t.subject}
                     </td>
@@ -271,7 +271,7 @@ export default function TicketsPage() {
                               setResolutionNotes("");
                               setResolveError(null);
                             }}
-                            className="px-3 py-1.5 bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold text-xs rounded-lg transition-colors"
+                            className="px-3 py-1.5 bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold text-xs rounded-lg transition-colors"
                           >
                             Resolve
                           </button>
@@ -297,10 +297,10 @@ export default function TicketsPage() {
       {/* CREATE INQUIRY MODAL (Customer only) */}
       {isCreateOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <TicketIcon className="w-5 h-5 text-cyan-400" /> Submit Support Ticket
+                <TicketIcon className="w-5 h-5 text-brand-400" /> Submit Support Ticket
               </h2>
               <button
                 onClick={() => setIsCreateOpen(false)}
@@ -325,7 +325,7 @@ export default function TicketsPage() {
                 <select
                   value={departmentId}
                   onChange={(e) => setDepartmentId(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors cursor-pointer"
                   required
                 >
                   <option value="" disabled>Select Department</option>
@@ -346,7 +346,7 @@ export default function TicketsPage() {
                   value={subject}
                   onChange={(e) => setSubject(e.target.value)}
                   placeholder="Summary of issue..."
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors"
                   required
                 />
               </div>
@@ -360,12 +360,12 @@ export default function TicketsPage() {
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Provide all details about the problem..."
                   rows={5}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors resize-none"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors resize-none"
                   required
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setIsCreateOpen(false)}
@@ -376,7 +376,7 @@ export default function TicketsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-gradient-to-r from-cyan-500 to-teal-600 hover:from-cyan-400 hover:to-teal-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
+                  className="bg-gradient-to-r from-brand-500 to-indigo-600 hover:from-brand-400 hover:to-indigo-500 text-white px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50"
                 >
                   {submitting ? "Submitting..." : "Submit Inquiry"}
                 </button>
@@ -389,8 +389,8 @@ export default function TicketsPage() {
       {/* RESOLVE TICKET MODAL (Admin only) */}
       {ticketToResolve && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl relative">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
                 <CheckCircle2 className="w-5 h-5 text-emerald-400" /> Resolve Ticket
               </h2>
@@ -410,7 +410,7 @@ export default function TicketsPage() {
             )}
 
             <form onSubmit={handleResolveSubmit} className="space-y-4">
-              <div className="bg-slate-950 border border-slate-800 rounded-xl p-4 text-xs space-y-2">
+              <div className="bg-surface border border-white/[0.08] rounded-xl p-4 text-xs space-y-2">
                 <div>
                   <span className="text-slate-500 block">Customer:</span>
                   <span className="text-white font-semibold">{ticketToResolve.customerUsername} ({ticketToResolve.customerEmail})</span>
@@ -434,12 +434,12 @@ export default function TicketsPage() {
                   onChange={(e) => setResolutionNotes(e.target.value)}
                   placeholder="Provide resolution details for the customer..."
                   rows={4}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors resize-none"
+                  className="w-full bg-surface border border-white/[0.08] text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-brand-500 text-sm transition-colors resize-none"
                   required
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-800">
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/[0.08]">
                 <button
                   type="button"
                   onClick={() => setTicketToResolve(null)}
@@ -450,7 +450,7 @@ export default function TicketsPage() {
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50 flex items-center gap-1.5"
+                  className="bg-brand-500 hover:bg-brand-400 text-slate-950 font-bold px-5 py-2 rounded-xl text-sm font-semibold transition-all duration-300 disabled:opacity-50 flex items-center gap-1.5"
                 >
                   <Send className="w-3.5 h-3.5" /> Resolve Ticket
                 </button>
@@ -463,10 +463,10 @@ export default function TicketsPage() {
       {/* DETAIL MODAL (Read-only Detail view) */}
       {selectedTicketDetail && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
-          <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
-            <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
+          <div className="w-full max-w-md glass-card p-6 shadow-2xl">
+            <div className="flex items-center justify-between mb-6 pb-4 border-b border-white/[0.08]">
               <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                <HelpCircle className="w-5 h-5 text-cyan-400" /> Support Ticket Details
+                <HelpCircle className="w-5 h-5 text-brand-400" /> Support Ticket Details
               </h2>
               <button
                 onClick={() => setSelectedTicketDetail(null)}
@@ -477,7 +477,7 @@ export default function TicketsPage() {
             </div>
 
             <div className="space-y-4">
-              <div className="bg-slate-950 border border-slate-850 rounded-xl p-4 text-xs space-y-3">
+              <div className="bg-surface border border-slate-850 rounded-xl p-4 text-xs space-y-3">
                 <div className="flex justify-between">
                   <span className="text-slate-500">Ticket ID:</span>
                   <span className="text-white font-semibold">#{selectedTicketDetail.id}</span>
@@ -507,7 +507,7 @@ export default function TicketsPage() {
                 </div>
               </div>
 
-              <div className="bg-slate-950/40 border border-slate-800/80 rounded-xl p-4 text-xs">
+              <div className="bg-surface/40 border border-white/[0.08] rounded-xl p-4 text-xs">
                 <span className="text-slate-500 block mb-1 font-semibold uppercase tracking-wider text-[10px]">Subject</span>
                 <p className="text-white font-semibold text-sm mb-2">{selectedTicketDetail.subject}</p>
                 <span className="text-slate-500 block mb-1 font-semibold uppercase tracking-wider text-[10px]">Description</span>
@@ -524,7 +524,7 @@ export default function TicketsPage() {
               )}
             </div>
 
-            <div className="flex justify-end pt-6 border-t border-slate-800 mt-6">
+            <div className="flex justify-end pt-6 border-t border-white/[0.08] mt-6">
               <button
                 type="button"
                 onClick={() => setSelectedTicketDetail(null)}

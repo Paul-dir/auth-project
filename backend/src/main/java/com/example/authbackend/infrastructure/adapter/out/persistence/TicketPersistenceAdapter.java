@@ -58,6 +58,11 @@ public class TicketPersistenceAdapter implements TicketRepositoryPort {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public long countByStatus(String status) {
+        return jpaRepository.countByStatus(status);
+    }
+
     private Ticket mapToDomain(TicketEntity entity) {
         return Ticket.builder()
                 .id(entity.getId())

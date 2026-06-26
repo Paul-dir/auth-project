@@ -3,10 +3,12 @@ package com.example.authbackend.config;
 import com.example.authbackend.application.port.out.DepartmentRepositoryPort;
 import com.example.authbackend.application.port.out.EmployeeRepositoryPort;
 import com.example.authbackend.application.port.out.LeaveRequestRepositoryPort;
+import com.example.authbackend.application.port.out.TicketRepositoryPort;
 import com.example.authbackend.application.port.out.UserRepositoryPort;
 import com.example.authbackend.domain.model.Department;
 import com.example.authbackend.domain.model.Employee;
 import com.example.authbackend.domain.model.LeaveRequest;
+import com.example.authbackend.domain.model.Ticket;
 import com.example.authbackend.domain.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +24,7 @@ public class DataSeeder implements CommandLineRunner {
     private final DepartmentRepositoryPort departmentRepo;
     private final EmployeeRepositoryPort employeeRepo;
     private final LeaveRequestRepositoryPort leaveRepo;
+    private final TicketRepositoryPort ticketRepo;
     private final UserRepositoryPort userRepo;
     private final PasswordEncoder passwordEncoder;
 
@@ -29,11 +32,13 @@ public class DataSeeder implements CommandLineRunner {
     public DataSeeder(DepartmentRepositoryPort departmentRepo,
                       EmployeeRepositoryPort employeeRepo,
                       LeaveRequestRepositoryPort leaveRepo,
+                      TicketRepositoryPort ticketRepo,
                       UserRepositoryPort userRepo,
                       PasswordEncoder passwordEncoder) {
         this.departmentRepo = departmentRepo;
         this.employeeRepo = employeeRepo;
         this.leaveRepo = leaveRepo;
+        this.ticketRepo = ticketRepo;
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
     }
@@ -179,6 +184,57 @@ public class DataSeeder implements CommandLineRunner {
                 .reason("Holiday trip").status("REJECTED")
                 .createdAt(LocalDateTime.now().minusDays(35)).updatedAt(LocalDateTime.now().minusDays(30))
                 .reviewedBy("admin").reviewNotes("Rejected - peak season, rescheduling required")
+                .build());
+
+        // Demo login accounts for all roles
+        userRepo.save(User.builder()
+                .username("alice")
+                .email("alice@company.com")
+                .password(passwordEncoder.encode("employee123"))
+                .role("EMPLOYEE")
+                .build());
+
+        userRepo.save(User.builder()
+                .username("customer")
+                .email("customer@example.com")
+                .password(passwordEncoder.encode("customer123"))
+                .role("CUSTOMER")
+                .build());
+
+        // Sample support tickets
+        ticketRepo.save(Ticket.builder()
+                .customerUsername("customer")
+                .customerEmail("customer@example.com")
+                .subject("Payroll inquiry")
+                .description("I need clarification on my last invoice payment schedule.")
+                .departmentId(fin.getId()).departmentName(fin.getName())
+                .status("PENDING")
+                .createdAt(LocalDateTime.now().minusDays(2))
+                .updatedAt(LocalDateTime.now().minusDays(2))
+                .build());
+
+        ticketRepo.save(Ticket.builder()
+                .customerUsername("customer")
+                .customerEmail("customer@example.com")
+                .subject("Access request for portal")
+                .description("Unable to view my previous support history after password reset.")
+                .departmentId(eng.getId()).departmentName(eng.getName())
+                .status("PENDING")
+                .createdAt(LocalDateTime.now().minusHours(6))
+                .updatedAt(LocalDateTime.now().minusHours(6))
+                .build());
+
+        ticketRepo.save(Ticket.builder()
+                .customerUsername("customer")
+                .customerEmail("customer@example.com")
+                .subject("Billing address update")
+                .description("Please update my billing address on file.")
+                .departmentId(ops.getId()).departmentName(ops.getName())
+                .status("RESOLVED")
+                .createdAt(LocalDateTime.now().minusDays(5))
+                .updatedAt(LocalDateTime.now().minusDays(1))
+                .resolvedBy("admin")
+                .resolutionNotes("Address updated successfully.")
                 .build());
     }
 }

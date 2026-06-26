@@ -1,6 +1,6 @@
-# Auth Project
+# Nexus EMS
 
-Full-stack employee management app with JWT authentication, departments, leave requests, and support tickets.
+Modern workforce platform — employees, departments, leave workflows, and customer support — built with Spring Boot and Next.js.
 
 | Layer    | Stack                          |
 |----------|--------------------------------|
@@ -23,12 +23,6 @@ cp .env.example .env   # optional — defaults work for local dev
 docker compose up -d
 ```
 
-Wait until the database is healthy:
-
-```bash
-docker compose ps
-```
-
 ### 2. Run the backend
 
 ```bash
@@ -37,8 +31,6 @@ cd backend
 ```
 
 API: [http://localhost:8080](http://localhost:8080)
-
-Default admin account (seeded on first run): **admin** / **admin123**
 
 ### 3. Run the frontend
 
@@ -50,31 +42,43 @@ npm run dev
 
 App: [http://localhost:3000](http://localhost:3000)
 
-The frontend proxies `/api/*` to the backend on port 8080.
+## Demo accounts
+
+| Role     | Username   | Password      |
+|----------|------------|---------------|
+| Admin    | `admin`    | `admin123`    |
+| Employee | `alice`    | `employee123` |
+| Customer | `customer` | `customer123` |
+
+Use the **Quick demo login** buttons on the sign-in page to auto-fill credentials.
 
 ## Build for production
 
 ```bash
-# Backend
 cd backend && ./mvnw package -DskipTests
-
-# Frontend
 cd frontend && npm install && npm run build && npm start
 ```
 
 ## Environment variables
 
-| Variable           | Default                                      | Description              |
-|--------------------|----------------------------------------------|--------------------------|
-| `DATABASE_URL`     | `jdbc:postgresql://localhost:5434/authdb`    | JDBC connection string   |
-| `DATABASE_USER`    | `auth`                                       | Database username        |
-| `DATABASE_PASSWORD`| `auth`                                       | Database password        |
-| `JPA_DDL_AUTO`     | `update`                                     | Hibernate schema mode    |
-| `JWT_SECRET`       | (dev default in properties)                  | JWT signing key          |
+| Variable           | Default                                      |
+|--------------------|----------------------------------------------|
+| `DATABASE_URL`     | `jdbc:postgresql://localhost:5434/authdb`    |
+| `DATABASE_USER`    | `auth`                                       |
+| `DATABASE_PASSWORD`| `auth`                                       |
+| `JPA_DDL_AUTO`     | `update`                                     |
 
 ## Stop services
 
 ```bash
 docker compose down        # keep data volume
-docker compose down -v     # remove data volume
+docker compose down -v     # remove data volume (re-seeds on next run)
 ```
+
+## Free deployment (Render + Vercel + Neon)
+
+1. **Database** — create a free PostgreSQL project at [neon.tech](https://neon.tech) and copy the JDBC connection string (`jdbc:postgresql://…/authdb?sslmode=require`).
+2. **Backend** — at [render.com](https://render.com), connect this repo and deploy from `render.yaml`. Set `DATABASE_URL`, `DATABASE_USER`, `DATABASE_PASSWORD`, and `CORS_ALLOWED_ORIGINS` (your Vercel URL, e.g. `https://your-app.vercel.app`).
+3. **Frontend** — at [vercel.com](https://vercel.com), import the repo with root directory `frontend`. Set `BACKEND_URL` to your Render API URL (e.g. `https://nexus-ems-api.onrender.com`).
+
+Demo accounts work after the backend starts and seeds data on first run.
