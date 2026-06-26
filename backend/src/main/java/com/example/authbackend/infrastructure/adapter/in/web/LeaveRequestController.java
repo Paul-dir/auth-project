@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Map;
 
@@ -24,42 +25,40 @@ public class LeaveRequestController {
 
     @GetMapping
     public ResponseEntity<List<LeaveRequestDto>> getAll(
-            @RequestParam(required = false) Long employeeId) {
-        if (employeeId != null) {
-            return ResponseEntity.ok(leaveRequestUseCase.getLeaveRequestsByEmployee(employeeId));
-        }
-        return ResponseEntity.ok(leaveRequestUseCase.getAllLeaveRequests());
+            @RequestParam(required = false) Long employeeId,
+            Principal principal) {
+        return ResponseEntity.ok(leaveRequestUseCase.getAllLeaveRequests(employeeId, principal.getName()));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<LeaveRequestDto> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(leaveRequestUseCase.getLeaveRequestById(id));
+    public ResponseEntity<LeaveRequestDto> getById(@PathVariable Long id, Principal principal) {
+        return ResponseEntity.ok(leaveRequestUseCase.getLeaveRequestById(id, principal.getName()));
     }
 
     @PostMapping
-    public ResponseEntity<LeaveRequestDto> create(@Valid @RequestBody LeaveRequestDto request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(leaveRequestUseCase.createLeaveRequest(request));
+    public ResponseEntity<LeaveRequestDto> create(@Valid @RequestBody LeaveRequestDto request, Principal principal) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(leaveRequestUseCase.createLeaveRequest(request, principal.getName()));
     }
 
     @PutMapping("/{id}/approve")
     public ResponseEntity<LeaveRequestDto> approve(@PathVariable Long id,
-                                                    @RequestBody(required = false) Map<String, String> body) {
-        String reviewedBy = body != null ? body.getOrDefault("reviewedBy", "Admin") : "Admin";
+                                                    @RequestBody(required = false) Map<String, String> body,
+                                                    Principal principal) {
         String notes = body != null ? body.getOrDefault("notes", "") : "";
-        return ResponseEntity.ok(leaveRequestUseCase.approveLeaveRequest(id, reviewedBy, notes));
+        return ResponseEntity.ok(leaveRequestUseCase.approveLeaveRequest(id, principal.getName(), notes));
     }
 
     @PutMapping("/{id}/reject")
     public ResponseEntity<LeaveRequestDto> reject(@PathVariable Long id,
-                                                   @RequestBody(required = false) Map<String, String> body) {
-        String reviewedBy = body != null ? body.getOrDefault("reviewedBy", "Admin") : "Admin";
+                                                   @RequestBody(required = false) Map<String, String> body,
+                                                   Principal principal) {
         String notes = body != null ? body.getOrDefault("notes", "") : "";
-        return ResponseEntity.ok(leaveRequestUseCase.rejectLeaveRequest(id, reviewedBy, notes));
+        return ResponseEntity.ok(leaveRequestUseCase.rejectLeaveRequest(id, principal.getName(), notes));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
-        leaveRequestUseCase.deleteLeaveRequest(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id, Principal principal) {
+        leaveRequestUseCase.deleteLeaveRequest(id, principal.getName());
         return ResponseEntity.noContent().build();
     }
 }

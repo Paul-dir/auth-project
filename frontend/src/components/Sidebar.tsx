@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  LayoutDashboard, Users, Building2, CalendarDays, LogOut, ChevronLeft, Menu, UserCircle2,
+  LayoutDashboard, Users, Building2, CalendarDays, LogOut, ChevronLeft, Menu, UserCircle2, Ticket,
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
@@ -13,6 +13,7 @@ const navItems = [
   { href: "/dashboard/employees", label: "Employees", icon: Users },
   { href: "/dashboard/departments", label: "Departments", icon: Building2 },
   { href: "/dashboard/leaves", label: "Leave Requests", icon: CalendarDays },
+  { href: "/dashboard/tickets", label: "Support Tickets", icon: Ticket },
   { href: "/dashboard/profile", label: "Profile", icon: UserCircle2 },
 ];
 
@@ -20,6 +21,23 @@ export default function Sidebar() {
   const pathname = usePathname();
   const { user, logout } = useAuth();
   const [collapsed, setCollapsed] = useState(false);
+
+  const filteredNavItems = navItems.filter((item) => {
+    if (!user) return false;
+    const role = user.role.toUpperCase();
+    if (role === "ADMIN") {
+      return true; // Admin has access to all pages
+    }
+    if (role === "EMPLOYEE") {
+      // Employees only access their Profile and Leave requests (labeled "My Leaves")
+      return item.href === "/dashboard/profile" || item.href === "/dashboard/leaves";
+    }
+    if (role === "CUSTOMER") {
+      // Customers only access Support Tickets (labeled "My Tickets")
+      return item.href === "/dashboard/tickets";
+    }
+    return false;
+  });
 
   return (
     <aside
@@ -57,8 +75,15 @@ export default function Sidebar() {
       {/* Nav */}
       <nav className="flex-1 py-4 overflow-y-auto">
         <ul className="space-y-1 px-2">
-          {navItems.map(({ href, label, icon: Icon }) => {
+          {filteredNavItems.map(({ href, label, icon: Icon }) => {
             const active = pathname === href;
+            let displayLabel = label;
+            if (href === "/dashboard/leaves" && user?.role.toUpperCase() === "EMPLOYEE") {
+              displayLabel = "My Leaves";
+            } else if (href === "/dashboard/tickets" && user?.role.toUpperCase() === "CUSTOMER") {
+              displayLabel = "My Tickets";
+            }
+
             return (
               <li key={href}>
                 <Link
@@ -68,10 +93,10 @@ export default function Sidebar() {
                       ? "bg-cyan-500/20 text-cyan-400 border border-cyan-500/30"
                       : "text-slate-400 hover:text-white hover:bg-slate-800"
                   }`}
-                  title={collapsed ? label : undefined}
+                  title={collapsed ? displayLabel : undefined}
                 >
                   <Icon className="w-5 h-5 shrink-0" />
-                  {!collapsed && <span>{label}</span>}
+                  {!collapsed && <span>{displayLabel}</span>}
                 </Link>
               </li>
             );

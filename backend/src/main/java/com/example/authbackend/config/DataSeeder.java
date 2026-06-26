@@ -40,6 +40,10 @@ public class DataSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+        if (departmentRepo.count() > 0) {
+            return;
+        }
+
         // Seed admin user
         if (!userRepo.existsByUsername("admin")) {
             userRepo.save(User.builder()

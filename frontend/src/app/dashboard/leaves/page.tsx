@@ -41,16 +41,32 @@ export default function LeavesPage() {
   // Delete State
   const [leaveToDelete, setLeaveToDelete] = useState<LeaveRequest | null>(null);
 
+  if (!user) return null;
+
+  const role = user.role.toUpperCase();
+  const isAdmin = role === "ADMIN";
+  const isEmployee = role === "EMPLOYEE";
+  const isCustomer = role === "CUSTOMER";
+
   const fetchData = async () => {
     if (!token) return;
     try {
       setLoading(true);
-      const [leavesData, empsData] = await Promise.all([
-        leaveApi.getAll(token),
-        employeeApi.getAll(token),
-      ]);
-      setLeaves(leavesData);
-      setEmployees(empsData);
+      if (isAdmin) {
+        const [leavesData, empsData] = await Promise.all([
+          leaveApi.getAll(token),
+          employeeApi.getAll(token),
+        ]);
+        setLeaves(leavesData);
+        setEmployees(empsData);
+      } else if (isEmployee) {
+        const [leavesData, profile] = await Promise.all([
+          leaveApi.getAll(token),
+          employeeApi.getProfile(token),
+        ]);
+        setLeaves(leavesData);
+        setEmployees([profile]);
+      }
       setError(null);
     } catch (err: any) {
       setError(err.message || "Failed to load leave requests data.");
@@ -60,8 +76,20 @@ export default function LeavesPage() {
   };
 
   useEffect(() => {
-    fetchData();
-  }, [token]);
+    if (!isCustomer) {
+      fetchData();
+    }
+  }, [token, user]);
+
+  if (isCustomer) {
+    return (
+      <div className="p-6 text-center text-slate-400 mt-20">
+        <AlertCircle className="w-12 h-12 text-red-500 mx-auto mb-4" />
+        <h2 className="text-xl font-bold text-white mb-2">Access Denied</h2>
+        <p className="text-sm">You do not have permission to view leave requests.</p>
+      </div>
+    );
+  }
 
   const openCreateModal = () => {
     setEmployeeId(employees.length > 0 ? employees[0].id : "");
@@ -76,7 +104,10 @@ export default function LeavesPage() {
   const handleCreateSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!token) return;
-    if (!employeeId || !startDate || !endDate) {
+
+    const empIdVal = isEmployee ? employees[0]?.id : Number(employeeId);
+
+    if (!empIdVal || !startDate || !endDate) {
       setCreateError("Please fill out all required fields.");
       return;
     }
@@ -86,9 +117,9 @@ export default function LeavesPage() {
       return;
     }
 
-    const selectedEmp = employees.find((emp) => emp.id === Number(employeeId));
+    const selectedEmp = employees.find((emp) => emp.id === empIdVal);
     const payload: Partial<LeaveRequest> = {
-      employeeId: Number(employeeId),
+      employeeId: empIdVal,
       employeeName: selectedEmp ? selectedEmp.fullName : "",
       leaveType,
       startDate,
@@ -171,9 +202,13 @@ export default function LeavesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-white tracking-tight">Leave Requests</h1>
+          <h1 className="text-2xl font-bold text-white tracking-tight">
+            {isEmployee ? "My Leave Requests" : "Leave Requests"}
+          </h1>
           <p className="text-slate-400 text-sm mt-1">
-            Review, approve or log leave applications for employees.
+            {isEmployee
+              ? "Manage and track your leave request history."
+              : "Review, approve or log leave applications for employees."}
           </p>
         </div>
         <button
@@ -271,12 +306,23 @@ export default function LeavesPage() {
                     <td className="p-4 text-right">
                       <div className="flex items-center justify-end gap-1">
                         {lr.status === "PENDING" ? (
-                          <button
-                            onClick={() => handleReview(lr)}
-                            className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1"
-                          >
-                            Review
-                          </button>
+                          <>
+                            {isAdmin && (
+                              <button
+                                onClick={() => handleReview(lr)}
+                                className="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-colors flex items-center gap-1"
+                              >
+                                Review
+                              </button>
+                            )}
+                            <button
+                              onClick={() => setLeaveToDelete(lr)}
+                              className="p-2 text-slate-400 hover:text-red-400 hover:bg-slate-800 rounded-lg transition-colors"
+                              title="Delete Request"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
                         ) : (
                           <button
                             onClick={() => setDetailRequest(lr)}
@@ -286,13 +332,6 @@ export default function LeavesPage() {
                             <Eye className="w-4 h-4" />
                           </button>
                         )}
-                        <button
-                          onClick={() => setLeaveToDelete(lr)}
-                          className="p-2 text-slate-400 hover:text-red-450 hover:bg-slate-800 rounded-lg transition-colors"
-                          title="Delete Request"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
                       </div>
                     </td>
                   </tr>
@@ -313,7 +352,7 @@ export default function LeavesPage() {
 
       {/* CREATE LEAVE REQUEST MODAL */}
       {isCreateOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
               <h2 className="text-xl font-bold text-white">Request Leave</h2>
@@ -333,24 +372,37 @@ export default function LeavesPage() {
             )}
 
             <form onSubmit={handleCreateSubmit} className="space-y-4">
-              <div>
-                <label className="block text-slate-455 text-xs font-semibold uppercase tracking-wider mb-1.5">
-                  Select Employee <span className="text-red-550">*</span>
-                </label>
-                <select
-                  value={employeeId}
-                  onChange={(e) => setEmployeeId(Number(e.target.value))}
-                  className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
-                  required
-                >
-                  <option value="" disabled>Select Employee</option>
-                  {employees.map((e) => (
-                    <option key={e.id} value={e.id}>
-                      {e.fullName} ({e.position})
-                    </option>
-                  ))}
-                </select>
-              </div>
+              {!isEmployee && (
+                <div>
+                  <label className="block text-slate-455 text-xs font-semibold uppercase tracking-wider mb-1.5">
+                    Select Employee <span className="text-red-550">*</span>
+                  </label>
+                  <select
+                    value={employeeId}
+                    onChange={(e) => setEmployeeId(Number(e.target.value))}
+                    className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl py-2 px-4 focus:outline-none focus:border-cyan-500 text-sm transition-colors cursor-pointer"
+                    required
+                  >
+                    <option value="" disabled>Select Employee</option>
+                    {employees.map((e) => (
+                      <option key={e.id} value={e.id}>
+                        {e.fullName} ({e.position})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              )}
+
+              {isEmployee && employees.length > 0 && (
+                <div>
+                  <label className="block text-slate-455 text-xs font-semibold uppercase tracking-wider mb-1">
+                    Employee Account
+                  </label>
+                  <div className="bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white font-medium">
+                    {employees[0].fullName} ({employees[0].position})
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label className="block text-slate-455 text-xs font-semibold uppercase tracking-wider mb-1.5">
@@ -433,7 +485,7 @@ export default function LeavesPage() {
 
       {/* REVIEW REQUEST MODAL */}
       {reviewRequest && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-955/80 backdrop-blur-sm">
           <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl relative">
             <div className="flex items-center justify-between mb-6 pb-4 border-b border-slate-800">
               <h2 className="text-xl font-bold text-white">Review Leave Request</h2>
@@ -453,7 +505,7 @@ export default function LeavesPage() {
             )}
 
             <div className="space-y-4 mb-6">
-              <div className="flex items-center gap-3 p-3 bg-slate-955/40 border border-slate-800/60 rounded-2xl">
+              <div className="flex items-center gap-3 p-3 bg-slate-950/40 border border-slate-800/60 rounded-2xl">
                 <Avatar name={reviewRequest.employeeName} size="md" />
                 <div>
                   <h3 className="text-white font-bold text-sm">{reviewRequest.employeeName}</h3>
@@ -504,7 +556,7 @@ export default function LeavesPage() {
                 type="button"
                 onClick={() => submitReview(false)}
                 disabled={submitting}
-                className="bg-red-650 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
+                className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
               >
                 Reject Request
               </button>
@@ -512,7 +564,7 @@ export default function LeavesPage() {
                 type="button"
                 onClick={() => submitReview(true)}
                 disabled={submitting}
-                className="bg-emerald-650 hover:bg-emerald-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
+                className="bg-emerald-600 hover:bg-emerald-550 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
               >
                 Approve Request
               </button>
@@ -559,7 +611,7 @@ export default function LeavesPage() {
                 {detailRequest.reason && (
                   <div className="border-t border-slate-800/80 pt-2 mt-2">
                     <span className="text-slate-500 block mb-1">Reason:</span>
-                    <p className="text-slate-350 leading-relaxed">{detailRequest.reason}</p>
+                    <p className="text-slate-300 leading-relaxed">{detailRequest.reason}</p>
                   </div>
                 )}
               </div>
@@ -569,9 +621,9 @@ export default function LeavesPage() {
                   <span className="text-slate-500">Reviewed By:</span>
                   <span className="text-white font-semibold">{detailRequest.reviewedBy || "N/A"}</span>
                 </div>
-                <div className="border-t border-slate-850/80 pt-2 mt-2">
+                <div className="border-t border-slate-800 pt-2 mt-2">
                   <span className="text-slate-500 block mb-1">Review Notes:</span>
-                  <p className="text-slate-350 leading-relaxed italic">
+                  <p className="text-slate-300 leading-relaxed italic">
                     {detailRequest.reviewNotes || "No review notes provided."}
                   </p>
                 </div>
@@ -597,13 +649,13 @@ export default function LeavesPage() {
           <div className="w-full max-w-sm bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-2xl">
             <h2 className="text-lg font-bold text-white mb-2">Delete Leave Request?</h2>
             <p className="text-slate-400 text-sm mb-6 leading-relaxed">
-              Are you sure you want to delete the leave request for <span className="text-white font-semibold">{leaveToDelete.employeeName}</span>?
+              Are you sure you want to delete this leave request? This action cannot be undone.
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
                 type="button"
                 onClick={() => setLeaveToDelete(null)}
-                className="bg-slate-800 hover:bg-slate-750 text-slate-300 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
+                className="bg-slate-800 hover:bg-slate-750 text-slate-350 px-4 py-2 rounded-xl text-sm font-semibold transition-colors"
               >
                 Cancel
               </button>
@@ -611,7 +663,7 @@ export default function LeavesPage() {
                 type="button"
                 onClick={handleDeleteConfirm}
                 disabled={submitting}
-                className="bg-red-650 hover:bg-red-600 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
+                className="bg-red-600 hover:bg-red-500 text-white px-4 py-2 rounded-xl text-sm font-semibold transition-colors disabled:opacity-50"
               >
                 {submitting ? "Deleting..." : "Delete"}
               </button>

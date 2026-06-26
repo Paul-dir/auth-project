@@ -23,6 +23,8 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import org.springframework.http.HttpMethod;
+
 import java.util.List;
 
 @Configuration
@@ -51,14 +53,18 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/auth/**").permitAll()
-                .requestMatchers("/h2-console/**").permitAll()
-                .requestMatchers("/api/employees/**").authenticated()
-                .requestMatchers("/api/departments/**").authenticated()
-                .requestMatchers("/api/leave-requests/**").authenticated()
-                .requestMatchers("/api/dashboard/**").authenticated()
+                .requestMatchers("/api/dashboard/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/employees/profile").hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers("/api/employees/**").hasRole("ADMIN")
+                .requestMatchers("/api/departments/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/leave-requests/*/approve").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/leave-requests/*/reject").hasRole("ADMIN")
+                .requestMatchers("/api/leave-requests/**").hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/tickets").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/tickets/*/resolve").hasRole("ADMIN")
+                .requestMatchers("/api/tickets/**").hasAnyRole("CUSTOMER", "ADMIN")
                 .anyRequest().authenticated())
-            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class)
-            .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.sameOrigin()));
+            .addFilterBefore(jwtAuthFilter(), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

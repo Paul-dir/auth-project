@@ -62,6 +62,7 @@ export const employeeApi = {
     return apiFetch<Employee[]>(`/employees${qs ? "?" + qs : ""}`, {}, token);
   },
   getById: (id: number, token: string) => apiFetch<Employee>(`/employees/${id}`, {}, token),
+  getProfile: (token: string) => apiFetch<Employee>("/employees/profile", {}, token),
   create: (data: EmployeeRequest, token: string) =>
     apiFetch<Employee>("/employees", { method: "POST", body: JSON.stringify(data) }, token),
   update: (id: number, data: EmployeeRequest, token: string) =>
@@ -105,6 +106,20 @@ export const leaveApi = {
 // Dashboard
 export const dashboardApi = {
   getStats: (token: string) => apiFetch<DashboardStats>("/dashboard/stats", {}, token),
+};
+
+// Tickets
+export const ticketApi = {
+  getAll: (token: string) => apiFetch<Ticket[]>("/tickets", {}, token),
+  getCustomerTickets: (token: string) => apiFetch<Ticket[]>("/tickets/customer", {}, token),
+  create: (data: { departmentId: number; subject: string; description: string }, token: string) =>
+    apiFetch<Ticket>("/tickets", { method: "POST", body: JSON.stringify(data) }, token),
+  resolve: (id: number, resolutionNotes: string, token: string) =>
+    apiFetch<Ticket>(
+      `/tickets/${id}/resolve`,
+      { method: "PUT", body: JSON.stringify({ resolutionNotes }) },
+      token
+    ),
 };
 
 // Types
@@ -170,4 +185,19 @@ export interface DashboardStats {
   pendingLeaveRequests: number;
   employeesByDepartment: Record<string, number>;
   employeesByStatus: Record<string, number>;
+}
+
+export interface Ticket {
+  id: number;
+  customerUsername: string;
+  customerEmail: string;
+  subject: string;
+  description: string;
+  departmentId: number;
+  departmentName?: string;
+  status: string; // PENDING, RESOLVED
+  createdAt: string;
+  updatedAt: string;
+  resolvedBy?: string;
+  resolutionNotes?: string;
 }
